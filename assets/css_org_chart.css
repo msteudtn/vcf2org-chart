@@ -1,0 +1,476 @@
+/*
+CSS based on "CSS-only Organizational Chart" by Envato Tuts+ 
+https://codepen.io/tutsplus/pen/MWedpoj
+License: MIT
+*/
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.class_for_details {
+	font-size:80%;
+	border-top: 1px solid black; 	
+	display:block;
+	margin-top: 10px;
+/*	display:none; */
+}
+
+.mybutton {
+/*	aspect-ratio: 1/1;	*/
+/*	padding-bottom: 100%;	*/
+	background-color: transparent;
+	padding: 2px;
+	margin: 0.1em; 
+/*	border: none; */
+	border: 1px solid #c0c0c0;
+	border-radius: 10%;
+	cursor: pointer;
+}
+
+select {
+    border: 1px solid #fff;
+    background-color: rgba(255,255,255,.5);
+    padding: 5px;
+}
+
+.mybutton:hover {
+	border: 1px dotted #000;
+}
+
+/* colors for all the levels 
+    https://htmlcolorcodes.com/ */
+:root {
+	--background-color01:#1E1A4D;
+	--background-color02:#312C85;
+	--background-color03:#372AAC;
+	--background-color04:#432DD7;
+	--background-color05:#4F39F6;
+	--background-color06:#615FFF;
+	--background-color07:#7C86FF;
+	--background-color08:#A3B3FF;
+	--background-color09:#C6D2FF;
+	--background-color10:#E0E7FF;
+}
+
+body {
+    background-color: #f0f0f0;
+    font-family: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+    font-size: 1.0em;
+    /* color: white; */
+}
+
+#wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80em;
+}
+
+#container {
+    float: left;
+    padding: 1em;
+    width: 100%;
+}
+
+/***	Change color on mouse over / hover ***/
+.organizational-chart li div:hover, .organizational-chart li div:hover+ol li div
+{
+/***	opacity: 0.5; 
+	background: #FF6467;
+***/
+	background-color: rgba(255, 0, 0, 0.5);
+	transition: all 0.5s;
+}
+
+
+ol.organizational-chart,
+ol.organizational-chart ol,
+ol.organizational-chart li,
+ol.organizational-chart li > div {
+    position: relative;
+}
+
+ol.organizational-chart,
+ol.organizational-chart ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ol.organizational-chart {
+    text-align: center;
+}
+
+ol.organizational-chart ol {
+    padding-top: 1em;
+}
+
+ol.organizational-chart ol:before,
+ol.organizational-chart ol:after,
+ol.organizational-chart li:before,
+ol.organizational-chart li:after,
+ol.organizational-chart > li > div:before,
+ol.organizational-chart > li > div:after {
+    background-color: #202020; 
+/**    background-color: rgba(var(--li-bg-color), 1); **/
+    content: '';
+    position: absolute;
+
+}
+
+ol.organizational-chart ol > li {
+    padding: 1em 0 0 1em;
+}
+
+ol.organizational-chart > li ol:before {
+    height: 1em;
+    left: 50%;
+    top: 0;
+    width: 2px;
+}
+
+ol.organizational-chart > li ol:after {
+    height: 2px;
+    left: 2px;
+    top: 1em;
+    width: 50%;
+}
+
+ol.organizational-chart > li ol > li:not(:last-of-type):before {
+    height: 2px;
+    left: 0;
+    top: 2em;
+    width: 1em;
+}
+
+ol.organizational-chart > li ol > li:not(:last-of-type):after {
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 2px;
+}
+
+ol.organizational-chart > li ol > li:last-of-type:before {
+    height: 2px;
+    left: 0;
+    top: 2em;
+    width: 1em;
+}
+
+ol.organizational-chart > li ol > li:last-of-type:after {
+    height: 2em;
+    left: 0;
+    top: 0;
+    width: 2px;
+}
+
+ol.organizational-chart li > div {
+    background-color: #fff;
+    border-radius: 2px;
+    min-height: 2em;
+    padding: 0.5em;
+}
+
+/*** PRIMARY ***/
+ol.organizational-chart > li > div {
+/**    background-color: rgba(var(--li-bg-color), 1.0); ***/
+	background-color: var(--background-color01); 
+	color: contrast-color(var(--background-color01)); 
+	margin-right: 1em;
+	border: 1px black solid;
+	border-radius: 10px;
+}
+
+ol.organizational-chart > li > div:before {
+    bottom: 2em;
+    height: 2px;
+    right: -1em;
+    width: 1em;
+}
+
+ol.organizational-chart > li > div:first-of-type:after {
+    bottom: 0;
+    height: 2em;
+    right: -1em;
+    width: 2px;
+}
+
+ol.organizational-chart > li > div + div {
+    margin-top: 1em;
+}
+
+ol.organizational-chart > li > div + div:after {
+    height: calc(100% + 1em);
+    right: -1em;
+    top: -1em;
+    width: 3+px;
+}
+
+/*** SECONDARY ***/
+ol.organizational-chart > li > ol:before {
+    left: inherit;
+    right: 0;
+}
+
+ol.organizational-chart > li > ol:after {
+    left: 0;
+    width: 100%;
+}
+
+ol.organizational-chart > li > ol > li > div {
+/*    background-color: rgba(var(--li-bg-color), 0.875); */
+	background-color: var(--background-color02); 
+	color: contrast-color(var(--background-color02));
+	border: 1px black solid;
+	border-radius: 9px;
+}
+
+/*** TERTIARY ***/
+ol.organizational-chart > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0.75); */
+	background-color: var(--background-color03); 
+	color: contrast-color(var(--background-color03));
+	border: 1px black solid;
+	border-radius: 8px;
+}
+
+/*** QUATERNARY ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0.625); */
+	background-color: var(--background-color04); 
+	color: contrast-color(var(--background-color04));
+	border: 1px black solid;
+	border-radius: 7px;
+}
+
+/*** QUINARY ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0.5); */
+	background-color: var(--background-color05); 
+	color: contrast-color(var(--background-color05));
+	border: 1px black solid;
+	border-radius: 6px;
+}
+
+/*** 6 ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0.375); */
+	background-color: var(--background-color06); 
+	color: contrast-color(var(--background-color06));
+	border: 1px black solid;
+	border-radius: 5px;
+}
+
+
+/*** 7 ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0.25); */
+	background-color: var(--background-color07); 
+	color: contrast-color(var(--background-color07));
+	border: 1px black solid;
+	border-radius: 4px;
+}
+
+/*** 8 ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0.125); */
+	background-color: var(--background-color08); 
+	color: contrast-color(var(--background-color08));
+	border: 1px black solid;
+	border-radius: 3px;
+}
+
+/*** 9 ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0); */
+	background-color: var(--background-color09); 
+	color: contrast-color(var(--background-color09));
+	border: 1px black solid;
+	border-radius: 2px;
+}
+
+/*** 10 ***/
+ol.organizational-chart > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > ol > li > div {
+/*	background-color: rgba(var(--li-bg-color), 0); */
+	background-color: var(--background-color10); 
+	color: contrast-color(var(--background-color10));
+	border: 1px black solid;
+	border-radius: 1px;
+}
+
+
+/*** MEDIA QUERIES ***/
+@media only screen and ( min-width: 64em ) {
+
+    ol.organizational-chart {
+        margin-left: -1em;
+        margin-right: -1em;
+    }
+
+    /* PRIMARY */
+    ol.organizational-chart > li > div {
+        display: inline-block;
+        float: none;
+        margin: 0 1em 1em 1em;
+        vertical-align: bottom;
+    }
+
+    ol.organizational-chart > li > div:only-of-type {
+        margin-bottom: 0;
+        width: calc((100% / 1) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(2),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(2) ~ div {
+        width: calc((100% / 2) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(3),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(3) ~ div {
+        width: calc((100% / 3) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(4),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(4) ~ div {
+        width: calc((100% / 4) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(5),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(5) ~ div {
+        width: calc((100% / 5) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(6),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(6) ~ div {
+        width: calc((100% / 6) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(7),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(7) ~ div {
+        width: calc((100% / 7) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(8),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(8) ~ div {
+        width: calc((100% / 8) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(9),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(9) ~ div {
+        width: calc((100% / 9) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(10),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(10) ~ div {
+        width: calc((100% / 10) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(11),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(11) ~ div {
+        width: calc((100% / 11) - 2em - 4px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(12),
+    ol.organizational-chart > li > div:first-of-type:nth-last-of-type(12) ~ div {
+        width: calc((100% / 12) - 2em - 4px);
+    }
+
+
+    ol.organizational-chart > li > div:before,
+    ol.organizational-chart > li > div:after {
+        bottom: -1em!important;
+        top: inherit!important;
+    }
+
+    ol.organizational-chart > li > div:before {
+        height: 1em!important;
+        left: 50%!important;
+        width: 2px!important;
+    }
+
+    ol.organizational-chart > li > div:only-of-type:after {
+        display: none;
+    }
+
+    ol.organizational-chart > li > div:first-of-type:not(:only-of-type):after,
+    ol.organizational-chart > li > div:last-of-type:not(:only-of-type):after {
+        bottom: -1em;
+        height: 2px;
+        width: calc(50% + 1em + 2px);
+    }
+
+    ol.organizational-chart > li > div:first-of-type:not(:only-of-type):after {
+        left: calc(50% + 2px);
+    }
+
+    ol.organizational-chart > li > div:last-of-type:not(:only-of-type):after {
+        left: calc(-1em - 2px);
+    }
+
+    ol.organizational-chart > li > div + div:not(:last-of-type):after {
+        height: 2px;
+        left: -2em;
+        width: calc(100% + 4em);
+    }
+
+    /* SECONDARY */
+    ol.organizational-chart > li > ol {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    ol.organizational-chart > li > ol:before,
+    ol.organizational-chart > li > ol > li:before {
+        height: 1em!important;
+        left: 50%!important;
+        top: 0!important;
+        width: 2px!important;
+    }
+
+    ol.organizational-chart > li > ol:after {
+        display: none;
+    }
+
+    ol.organizational-chart > li > ol > li {
+        flex-grow: 1;
+        padding-left: 1em;
+        padding-right: 1em;
+        padding-top: 1em;
+    }
+
+    ol.organizational-chart > li > ol > li:only-of-type {
+        padding-top: 0;
+    }
+
+    ol.organizational-chart > li > ol > li:only-of-type:before,
+    ol.organizational-chart > li > ol > li:only-of-type:after {
+        display: none;
+    }
+
+    ol.organizational-chart > li > ol > li:first-of-type:not(:only-of-type):after,
+    ol.organizational-chart > li > ol > li:last-of-type:not(:only-of-type):after {
+        height: 2px;
+        top: 0;
+        width: 50%;
+    }
+
+    ol.organizational-chart > li > ol > li:first-of-type:not(:only-of-type):after {
+        left: 50%;
+    }
+
+    ol.organizational-chart > li > ol > li:last-of-type:not(:only-of-type):after {
+        left: 0;
+    }
+
+    ol.organizational-chart > li > ol > li + li:not(:last-of-type):after {
+        height: 2px;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+}
