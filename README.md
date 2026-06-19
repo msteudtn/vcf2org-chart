@@ -17,7 +17,7 @@ It creates a file `index_contacts.html` and should start your browser.
 
 ## Prerequisites (you need ...)
 
-* Your address-book exported as a **vCard VCF-file**. Please refer to your email / contact / messenger-application. You can find a short example of a VCF-file for the TV-show character Homer Simpson.
+* Your address-book exported as a **vCard VCF-file**. Please refer to your email / contact / messenger-application. You can look at the short [example of a VCF-file](https://github.com/msteudtn/vcf2org-chart/blob/main/Simpsons.vcf) for the TV-show character Homer Simpson. 
 
 * Some hashtags in the NOTE of your contacts
   * **Three hashes** for your own contact details.  
@@ -40,7 +40,7 @@ It creates a file `index_contacts.html` and should start your browser.
 ## Customization (optional)
 
 ### How to choose specific elements from the vCard?
-Within the script, find the `list_of_vcf_property_types` in the first lines. You always need the **first four elements**!  
+Within the [script](https://github.com/msteudtn/vcf2org-chart/blob/main/vcf2chart.py) , find the `list_of_vcf_property_types` in the first lines. You always need the **first four elements**!  
 `list_of_vcf_property_types  = ["FN", "NOTE", " ", "CATEGORIES"]`  
 But you can add more if you like.  
 `list_of_vcf_property_types = ["FN", "NOTE", " ", "CATEGORIES", "ADR", "TEL", "EMAIL", "BDAY", "URL", "PHOTO"]`  
@@ -48,11 +48,11 @@ A list of properties can be found on Wikipedia https://en.wikipedia.org/wiki/VCa
 
 ### How to change the default depth of shown contacts at the beginning?
 The HTML file shows only the first three levels by default. `(1: You, 2:Categories / first parents, 3:First children)`  
-Within the `assets/treeData.js` find the function `toggle_levels(3)` and change it to another number.  
+Within the [`assets/treeData.js`](https://github.com/msteudtn/vcf2org-chart/blob/main/assets/treeData.js) find the function `toggle_levels(3)` and change it to another number.  
 Example: `toggle_levels(5)`
 
 ### How to change the colors of the name-boxes?
-Within the stylesheets in `àssets/css_org_chart.css` find the `:root`-part. It defines the **background-colors** for up to ten contact-levels.
+Within the stylesheets in [`àssets/css_org_chart.css`](https://github.com/msteudtn/vcf2org-chart/blob/main/assets/css_org_chart.css) find the `:root`-part. It defines the **background-colors** for up to ten contact-levels.
 The **text-color** (black / white) is calculated automatically based on the background using the CSS `contrast-color`.
 
 ## Known bugs
