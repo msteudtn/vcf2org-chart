@@ -31,9 +31,11 @@ It creates a file `index_contacts.html` and should start your browser.
   * A child overrules the category.
     Example: `My family + #sports` -> The contact will be under `##sports` but not `My family`.
 
-* Optionally: a hashtag `#no` in the NOTE for contacts you want to hide from the chart
+* Optionally: a hashtag `#no` in the NOTE for contacts you want to hide from the chart.  
+  Example: The `Test Contact - to ignore` in the VCF-file.
 
-* Optionally: Normal categories (sometimes called "label") on your contacts. Example: `My family, Friends`
+* Optionally: Normal categories (sometimes called "label") on your contacts.  
+  Example: The contacts `Bart, Lisa, Marge, Maggie` with `My family` in the VCF-file.
 
 * Python in version 3.x or higher
 
