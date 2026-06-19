@@ -26,9 +26,9 @@ It creates a file `index_contacts.html` and should start your browser.
     Example `##work, ##friends, ##football`
   * **One hash** for the child-elements.
     Example: `#work, #friends, #football`
-  * A child can also be parent to other children.
+  * A child can also be parent to other children.  
     Example: parent A: `##sports` -> has child B: with `#sports`. But B is also labeled parent for `##football` to -> child C: `#football`
-  * A child overrules the category.
+  * A child overrules the category.  
     Example: `My family + #sports` -> The contact will be under `##sports` but not `My family`.
 
 * Optionally: a hashtag `#no` in the NOTE for contacts you want to hide from the chart.  
@@ -43,9 +43,13 @@ It creates a file `index_contacts.html` and should start your browser.
 
 ### How to choose specific elements from the vCard?
 Within the [script](https://github.com/msteudtn/vcf2org-chart/blob/main/vcf2chart.py) , find the `list_of_vcf_property_types` in the first lines. You always need the **first four elements**!  
-`list_of_vcf_property_types  = ["FN", "NOTE", " ", "CATEGORIES"]`  
+~~~
+list_of_vcf_property_types  = ["FN", "NOTE", " ", "CATEGORIES"]
+~~~
 But you can add more if you like.  
-`list_of_vcf_property_types = ["FN", "NOTE", " ", "CATEGORIES", "ADR", "TEL", "EMAIL", "BDAY", "URL", "PHOTO"]`  
+~~~
+list_of_vcf_property_types = ["FN", "NOTE", " ", "CATEGORIES", "ADR", "TEL", "EMAIL", "BDAY", "URL", "PHOTO"]
+~~~
 A list of properties can be found on Wikipedia https://en.wikipedia.org/wiki/VCard#Properties
 
 ### How to change the default depth of shown contacts at the beginning?
@@ -61,8 +65,8 @@ The **text-color** (black / white) is calculated automatically based on the back
 
 ### Multiple children
 **Multiple** #children or categories within one contact are **not possible**.  
-Example: "Test Contact - with multiple categories" -> `CATEGORIES:Friends,My Family` -> last one is taken  
-Example: "Test Contact - with multiple children" -> `NOTE:#burns #bart` -> last one is taken
+* Example 1: "Test Contact - with multiple categories" -> `CATEGORIES:Friends,My Family` -> last one is taken  
+* Example 2: "Test Contact - with multiple children" -> `NOTE:#burns #bart` -> last one is taken
 
 ### Additional vCard-labels
 
@@ -75,27 +79,27 @@ TEL;TYPE=HOME:555-6832
 results into:  
 `TYPE=WORK:555-7334 TYPE=HOME:555-6832`
 
-* Example 2: Montgomery Burns (without extra labels)  `TEL:(636) 555-0113`  
-  result: `(636) 555-0113`
+* Example 2: Montgomery Burns (**without** extra labels)  `TEL:(636) 555-0113`  
+  results into: `(636) 555-0113`
 
 ### Hashtags and long notes
 
 **Hashtags** should have **a space character in front** of them. If not, they can cause a mismatch in combination with long texts before the hash tag in the NOTE-part.  
-Example: 
+Example: In the **contact-note** you have two lines:
 ~~~
 A very long note on a person and a hash tag that follows.
 #child
 ~~~
-could turn in the VCF file into:
+This could look in the **VCF file** like this:
 ~~~
 NOTE:A very long note on a person and a hash tag that follows.
 ` #child
 ~~~ 
-which then is processed into:  
+Which then is processed by the **script** into:  
 ~~~
 A very long note on a person and a hash tag that follow.s#child
 ~~~
-So it would be better to write:
+So it would be **better** to write a **contact-note** like this:
 ~~~
 A very long note on a person and a hash tag that follows.
  #child
@@ -103,8 +107,12 @@ A very long note on a person and a hash tag that follows.
 
 ### Image data
 
-There are different ways to specify a **photo**. The browser needs a string like `data:image/png;base64,[base64-data]` to show the data. But the vCard contains a string like:  
-`PHOTO:TYPE=PNG;ENCODING=b:[base64-data]` or `PHOTO:ENCODING=BASE64;TYPE=PNG:[base64-data]` or `PHOTO;MEDIATYPE=image/png:http://example.com/logo.png`  
+There are different ways to specify a **photo**. The browser needs a string like  
+`data:image/png;base64,[base64-data]` to show the data.  
+But the vCard contains a string like:  
+`PHOTO:TYPE=PNG;ENCODING=b:[base64-data]` or  
+`PHOTO:ENCODING=BASE64;TYPE=PNG:[base64-data]` or  
+`PHOTO;MEDIATYPE=image/png:http://example.com/logo.png`  
 So far, not all **possible scenarios** are covered. 
 
 
