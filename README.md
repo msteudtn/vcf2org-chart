@@ -59,29 +59,53 @@ The **text-color** (black / white) is calculated automatically based on the back
 
 ## Known bugs
 
-* **Multiple** #children or categories within one contact are **not possible**.  
+### Multiple children
+**Multiple** #children or categories within one contact are **not possible**.  
 Example: "Test Contact - with multiple categories" -> `CATEGORIES:Friends,My Family` -> last one is taken  
 Example: "Test Contact - with multiple children" -> `NOTE:#burns #bart` -> last one is taken
 
-* Extra labels **aren't filtered**.  
-  * Example: Homer Simpsons (**with** extra labels)  
-	  `TEL;TYPE=WORK:555-7334`  
-	  `TEL;TYPE=HOME:555-6832`  
-	   result: `TYPE=WORK:555-7334 TYPE=HOME:555-6832`
-  * Example: Montgomery Burns (without extra labels)  
-	  `TEL:(636) 555-0113`  
-	  result: `(636) 555-0113`
+### Additional vCard-labels
 
-* **Hashtags** should have **a space character in front** of them. If not, they can cause a mismatch with long texts before the hash tag in the NOTE-part.  
-Example: `A very long note on a person and a hash tag that follows #child`  
-could turn in the VCF file into  
-`NOTE:A very long note on a person and a hash tag that follows `  
-` #child`  
+Extra labels **aren't filtered**.  
+* Example 1: Homer Simpsons (**with** extra labels)  
+~~~
+TEL;TYPE=WORK:555-7334
+TEL;TYPE=HOME:555-6832
+~~~
+results into:  
+`TYPE=WORK:555-7334 TYPE=HOME:555-6832`
+
+* Example 2: Montgomery Burns (without extra labels)  `TEL:(636) 555-0113`  
+  result: `(636) 555-0113`
+
+### Hashtags and long notes
+
+**Hashtags** should have **a space character in front** of them. If not, they can cause a mismatch in combination with long texts before the hash tag in the NOTE-part.  
+Example: 
+~~~
+A very long note on a person and a hash tag that follows.
+#child
+~~~
+could turn in the VCF file into:
+~~~
+NOTE:A very long note on a person and a hash tag that follows.
+` #child
+~~~ 
 which then is processed into:  
-`A very long note on a person and a hash tag that follows#child`
+~~~
+A very long note on a person and a hash tag that follow.s#child
+~~~
+So it would be better to write:
+~~~
+A very long note on a person and a hash tag that follows.
+ #child
+~~~
 
-* There are different ways to specify a **photo**. The browser needs a string like `data:image/png;base64,[base64-data]` to show the data. So far, not all **possible scenarios** are covered currently.  
-Examples: `PHOTO:TYPE=PNG;ENCODING=b:[base64-data]` or `PHOTO:ENCODING=BASE64;TYPE=PNG:[base64-data]` or `PHOTO;MEDIATYPE=image/png:http://example.com/logo.png`
+### Image data
+
+There are different ways to specify a **photo**. The browser needs a string like `data:image/png;base64,[base64-data]` to show the data. But the vCard contains a string like:  
+`PHOTO:TYPE=PNG;ENCODING=b:[base64-data]` or `PHOTO:ENCODING=BASE64;TYPE=PNG:[base64-data]` or `PHOTO;MEDIATYPE=image/png:http://example.com/logo.png`  
+So far, not all **possible scenarios** are covered. 
 
 
 ## Development and license
