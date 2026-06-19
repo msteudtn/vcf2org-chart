@@ -13,6 +13,8 @@ Example: Your buddy Frank (6) is married to Eve (5). She is a colleague of David
 To run, type `vcf2chart.py FILENAME.VCF` or `vcf2chart.py "../another-folder/FILENAME.VCF"` depending on where the file is located.
 It creates a file `index_contacts.html` and should start your browser.
 
+![example of a contact organization chart](https://raw.githubusercontent.com/msteudtn/vcf2org-chart/refs/heads/main/assets/example.png)
+
 ## Prerequisites (you need ...)
 
 * Your address-book exported as a **vCard VCF-file**. Please refer to your email / contact / messenger-application. You can find a short example of a VCF-file for the TV-show character Homer Simpson.
