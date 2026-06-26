@@ -1,11 +1,27 @@
+# ######################################################################
 # vcf2org-chart +++ Contacts-to-organization-chart-converter
 # License: MIT
-# Version: 0.1.20260619
+# ######################################################################
+
+
+# ######################################################################
+# IMPORT MODULES
+#
+# ######################################################################
+
+import datetime		# needed to show the times of the script
+import sys		# needed to read the filename from the command line
+import json		# needed for debugging to show the dictionaries 
+import subprocess, os, platform # needed at the end to start the browser
+
 
 # ######################################################################
 # DEFINE VARIABLES
 #
 # ######################################################################
+
+# Version to show in the finished HTML file
+version_number = "0.1.01.20260626"
 
 # Look for these elements from the vCard.
 # The first four items: "FN", "NOTE", " ", "CATEGORIES" must be in the list! Anything else is optional.
@@ -28,6 +44,10 @@ dictionary_of_known_parents = {}
 # Example: ["22": {FN:"Ralph Wiggum", NOTE:"He's a classmate. #lisa"} } -> Save {"#lisa":"[10, 22, ...] "}
 dictionary_of_known_children = {}
 
+# A dictionary (array) of connections between contacts, identified by a pipe "|"
+# Example: "Carl:NOTE:'abc |moe def'" -> Connection to "Moe:NOTE:'ghi ##moe jkl'"
+dictionary_of_connections = {}
+
 # A dictionary for the final ORG-CHART. It's going to be turned into a JSON later.
 dictionary_for_org_chart_json = {}
 
@@ -37,6 +57,7 @@ contact_counter = 0
 
 # The ID of the persons address book = You = identified by three hashes (###)
 id_number_of_main_character = 0
+
 
 # ######################################################################
 # DEFINE FUNCTIONS
@@ -67,14 +88,16 @@ def function_clean_contact_details(vcf_file_line, vcf_property_value, length_cor
 
 	# ... replace special characters with space
 	vcf_property_value = vcf_property_value.replace("\n", "")	# replace the "new line" at the end of the string.
+	vcf_property_value = vcf_property_value.replace("\r", "")	# replace the "carriage return" at the end of the string.
 	vcf_property_value = vcf_property_value.replace("\\n", " ")	# replace the string "\n" - mainly in the "NOTE"-section
-	vcf_property_value = vcf_property_value.replace("\\", " ")	# replace \
+	vcf_property_value = vcf_property_value.replace("\\", " ")	# replace the backslash "\" with space
 	vcf_property_value = vcf_property_value.replace("\'", "&apos;")	# replace ' with it's HTML entity
 	vcf_property_value = vcf_property_value.replace("\"", "&quot;")	# replace " with it's HTML entity
 
 	return vcf_property_value
 
-# print out colorful text messages to the terminal.
+
+# Function to print out colorful text messages to the terminal.
 # Example: fn_color_message("RED", "This is an error message")
 def fn_color_message(color, text):
 
@@ -105,28 +128,32 @@ def fn_color_message(color, text):
 #
 # ######################################################################
 
-import sys
+time_now = datetime.datetime.now()
+time_start = time_now
+fn_color_message("YELLOW", "\n {} - Begin processing.".format( time_now ))
 
 if ( len(sys.argv) > 1 ): 
 	vcf_file_name = sys.argv[1]
-	fn_color_message("GREEN", "\n OK: Filename passed to the script. ")
+	fn_color_message("GREEN", "\n OK: Filename '{}' passed to the script. ".format(vcf_file_name))
 else:
-	fn_color_message("RED", "\n ERROR: No filename given. Example: python SCRIPTNAME.PY 'My Contacts.vcf' \n")
+	fn_color_message("RED", "\n ERROR: No filename given. \n Example: python SCRIPTNAME.PY 'My Contacts.vcf' \n")
 	sys.exit([args]) 
 
 try:
 	vcf_file_handle = open(vcf_file_name)
 	fn_color_message("GREEN", "\n OK: File found and accessible.")
 except FileNotFoundError:
-	fn_color_message("RED", "\n ERROR: File was not found. Maybe there's a typo?' \n")
+	fn_color_message("RED", "\n ERROR: The file '{}' was not found. \n Maybe there's a typo?' \n".format(vcf_file_name))
 	sys.exit([args]) 
+
 
 # ######################################################################
 # VCARD FILE HANDLING
 # Go through the vCard-file and get the line number of "BEGIN:VCARD" and "END:VCARD" of each contact into a dictionary{} for further processing
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Going through the contact-file.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Going through the contact-file.".format( time_now ))
 
 # Keep the name of the last property type (FN, NOTE, URL, TEL, ...) in case of long lines (starting with space " ").
 last_known_vcf_property_type = ""
@@ -265,7 +292,8 @@ with vcf_file_handle as vcf_file:
 # Close the file handle.
 vcf_file_handle.close()
 
-fn_color_message("YELLOW", "Finished: Going through the contact-file.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Going through the contact-file.".format( time_now ))
 
 
 # Warning messages
@@ -275,13 +303,13 @@ else:
 	fn_color_message("RED", "\n Error: No contacts found in VCF file. Is it really a vCard-format?")
 
 
-
 # ######################################################################
 # FIND THE PARENT AND CHILD HASHES (###,##,#)
-# Go through dictionary of contacs (array) and put ##PARENTS and ##CHILDREN into their own dictionaries
+# Go through dictionary of contacts (array) and put ##PARENTS and #CHILDREN into their own dictionaries
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Looking for hash-tags in the NOTE-part.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Looking for hash-tags in the NOTE-part.".format( time_now ))
 
 # Go through all the contact IDs and look for the NOTE-part
 # Example: "1": {FN: Homer, TEL: "12345"}, "2": {FN: "Bart", NOTE: "a note"}
@@ -299,12 +327,14 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 	# The NOTE-part was found. It contains information on the relations.
 	if (note_found == True):
 
+
+		# Split the NOTE at the space-character and save as a list (array).
+		# Example: "a note on Bart ##bart" -> ["a", "note", "on", "Bart", "##bart"]
+		list_of_split_note = note_value.split(" ")
+
+
 		# See, if there's at least on hash in the note. (False-positive may be possible, also. :( )
 		if (note_value.find("#") > -1):
-
-			# Split the NOTE at the space-character and save as a list (array).
-			# Example: "a note on Bart ##bart" -> ["a", "note", "on", "Bart", "##bart"]
-			list_of_split_note = note_value.split(" ")
 
 			# Go through the list and find all entries with a hash "#". 
 			for word in list_of_split_note:
@@ -313,6 +343,8 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 				# Example: ["##bart"] = 2x
 				if (word.find("#") > -1):
 
+					word = word.lower()
+
 					# Find the main node with three hashes "###" and save its ID.
 					if (word.count("#") == 3):
 						# Check if the ID number has been set before = more than one entry with "###"
@@ -320,7 +352,7 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 							fn_color_message("RED", " Error: There is more than one entry with three hashes '###'. Can't decide who the main contact is. Last found contact is: {}".format(contact_value))
 						else:
 							id_number_of_main_character = contact_key
-							fn_color_message("GREEN", " OK: Found the main contact: {} ".format(contact_value["FN"]))
+							fn_color_message("GREEN", " OK: Found the main contact: '{}' at position '{}'.".format(contact_value["FN"] , id_number_of_main_character))
 
 					# Find the parent-nodes with two hashes "##" and save it to a dictionary for easier processing in the next run.
 					# Example: ["14": {FN:"Lisa Simpson", NOTE:"She's the daughter. ##lisa"} } -> Save {"14":"##lisa"}
@@ -379,17 +411,18 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 			dictionary_of_known_children["#nocategory"] = []
 			dictionary_of_known_children["#nocategory"].append( str(contact_key) )
 
-fn_color_message("YELLOW", "Finished: Looking for hash-tags in the NOTE-part.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Looking for hash-tags in the NOTE-part.".format( time_now ))
 
 
 # Error messages
 if ( len(dictionary_of_known_children) > 0):
-	fn_color_message("GREEN", "\n OK: Single #hash-tags (as children) were found in the contacts.")
+	fn_color_message("GREEN", "\n OK: {} single #hash-tags (as children) were found in the contacts.".format( len(dictionary_of_known_children) ) )
 else:
 	fn_color_message("RED", "\n Error: No single #hash-tags were found in the contacts.")
 
 if ( len(dictionary_of_known_parents) > 0):
-	fn_color_message("GREEN", "\n OK: Double ##hash-tags (as parents) were found in the contacts.")
+	fn_color_message("GREEN", "\n OK: {} double ##hash-tags (as parents) were found in the contacts.".format( len(dictionary_of_known_parents) ) )
 else:
 	fn_color_message("RED", "\n Error: No double ##hash-tags were found in the contacts.")
 
@@ -400,12 +433,103 @@ else:
 
 
 # ######################################################################
+# FIND THE CONNECTIONS (|)
+# Go through dictionary of contacts (array) and put |CONNECTIONS (to ##PARENTS) into their own dictionary
+# ######################################################################
+
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Looking for pipe symbols (connections) in the NOTE-part.".format( time_now ))
+
+for contact_key, contact_value in dictionary_of_contacts.items():
+
+	note_found = False
+
+	# Check if the contact has a NOTE
+	try:
+		note_value = dictionary_of_contacts[contact_key]["NOTE"]
+		note_found = True
+	except KeyError:
+		note_found = False
+
+	# The NOTE-part was found. It contains information on the relations.
+	if (note_found == True):
+
+
+		# Split the NOTE at the space-character and save as a list (array).
+		# Example: "a note on Bart ##bart" -> ["a", "note", "on", "Bart", "##bart"]
+		list_of_split_note = note_value.split(" ")
+
+		# See, if there's at least on pipe "|" in the note. (False-positive may be possible, also. :( )
+		if (note_value.find("|") > -1):
+
+			# Go through the list and find all entries with a hash "|". 
+			for word in list_of_split_note:
+
+				# Count the number of pipes in the entry
+				# Example: ["|moe"] = 1x
+				if (word.find("|") > -1):
+
+					bool_connection_found = False
+					parent_key_for_connection = 0
+
+					# Go through the already found KNOWN PARENTS and find the parent to the connection
+					for parent_key, parent_values in dictionary_of_known_parents.items():
+
+						# If there's more than one entry for this parent. 
+						# (Because so far, the dictionary hasn't been cleaned. 
+						# Example: "3" (Bart): "##bart, ##bart-kindergarten, ##bart-friends"
+						if ( len(parent_values) >  0):
+
+							for parent_value in parent_values:
+								if ( parent_value[2:] == word[1:] ):
+
+									bool_connection_found = True
+									parent_key_for_connection = parent_key
+								else:
+									pass
+
+
+					if (bool_connection_found == True):
+						# (1.) Add the ID numbers of parent and connections to the list of CONNECTIONS - based on the "##parent"
+						# Example: ##moe = 19 : [6, 1] = "Carl Carlson, Barney Gumble"
+						try:
+							dictionary_of_connections[str(parent_key_for_connection)].append( str(contact_key) )
+
+						except KeyError:
+							dictionary_of_connections[str(parent_key_for_connection)] = []
+							dictionary_of_connections[str(parent_key_for_connection)].append( str(contact_key) )
+
+						# (2.) Add the ID numbers of connections and parent to the list of CONNECTIONS - based on the "|connection"
+						# Example: ##moe = 19 : [6, 1] = "Carl Carlson, Barney Gumble"
+						try:
+							# new
+							dictionary_of_connections[str(contact_key)].append( str(parent_key_for_connection) )
+
+						except KeyError:
+							# new
+							dictionary_of_connections[str(contact_key)] = []
+							dictionary_of_connections[str(contact_key)].append( str(parent_key_for_connection) )
+
+					else:
+						fn_color_message("RED", " Warning: Couldn't find a ##parent named like the |connection: \n \" {} \" \n for the contact: \n \" {} \" \n Connection has been ignored. ".format(word, contact_value['FN']) )
+
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Looking for pipe symbols (connections) in the NOTE-part.".format( time_now ))
+
+# Error messages
+if ( len(dictionary_of_connections) > 0):
+	fn_color_message("CYAN", "\n Information: {} |connections were found in the contacts.".format( len(dictionary_of_connections ) ) )
+else:
+	fn_color_message("CYAN", "\n Information: No |connections were found in the contacts.")
+
+# ######################################################################
 # UPDATE "DICTIONARY OF CONTACTS" WITH CATEGORIES AND PARENTS
 # Go through the dictionary (array) and add the CATEGORIES as "FN"
 # ######################################################################
 
 # (1.) Always create a new contact "No category" in the CONTACT-dictionary as future parent.
-fn_color_message("YELLOW", "\n Start: Adding a new contact 'No Category' to the existing contacts.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Adding a new contact 'No Category' to the existing contacts.".format( time_now ))
 
 # Count the number of contacts for the python-dictionary (array) and convert it to a string, so it can be used as an ID in JSON.
 contact_counter = contact_counter + 1
@@ -435,11 +559,13 @@ except KeyError:
 # Add the main contact as parent to the ##nocategory-entry
 dictionary_of_contacts[contact_counter_as_string]["PARENTS"] = str(id_number_of_main_character)
 
-fn_color_message("YELLOW", "Finished: Adding a new contact 'No Category' to the existing contacts.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Adding a new contact 'No Category' to the existing contacts.".format( time_now ))
 
 
 # (2.) Go through the list of CATEGORIES ["My Family", "Friends"] and add it to the dictionary of contacts with the PARENT of the MAIN CONTACT
-fn_color_message("YELLOW", "\n Start: Looking for CATEGORIES within the contacts and add them as new contact.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Looking for CATEGORIES within the contacts and add them as new contact.".format( time_now ))
 
 
 # Remove all duplicates from the list
@@ -469,7 +595,8 @@ for category in list_of_unique_categories:
 	dictionary_of_known_parents[contact_counter_as_string] = []
 	dictionary_of_known_parents[contact_counter_as_string].append( "##" + category.replace(" ", "").lower() )
 
-fn_color_message("YELLOW", "Finished: Looking for CATEGORIES within the contacts and add them as new contact.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Looking for CATEGORIES within the contacts and add them as new contact.".format( time_now ))
 
 
 # ######################################################################
@@ -478,7 +605,8 @@ fn_color_message("YELLOW", "Finished: Looking for CATEGORIES within the contacts
 # Example: The child "#work" is in the contact-NOTE but there's no parent "##work" for it.
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Looking for child-nodes without any parent-nodes and create new parent-contacts.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Looking for child-nodes without any parent-nodes and create them as new parent-contacts.".format( time_now ))
 
 # Create a temporary list
 temporary_list_of_unknown_parents = []
@@ -542,15 +670,17 @@ for parent_value in temporary_list_of_unknown_parents:
 	dictionary_of_known_parents[contact_counter_as_string].append( "" + parent_value.replace(" ", "").lower() )
 
 
-fn_color_message("YELLOW", "Finished: Looking for child-nodes without any parent-nodes and create new parent-contacts.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Looking for child-nodes without any parent-nodes and create them as new parent-contacts.".format( time_now ))
 
 
 # ######################################################################
-# FIND PARENTS WITH MULTIPLE CHILDREN AND UPDATE THE KNOW PARENTS AND CONTACTS
+# FIND KNOWN-PARENTS WITH MULTIPLE CHILDREN AND UPDATE THE KNOW PARENTS AND CONTACTS
 # Example: before: {'1': ['##bart-school','##bart-kindergarten']} -> after: {99:['bart-school'], 100:['bart-kindergarten']}
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Find parents with multiple children and save their values.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Find parents with multiple children and save their values.".format( time_now ))
 
 temporary_list_of_known_parents_to_delete = []
 temporary_dictionary_of_known_parents_to_add = {}
@@ -620,14 +750,17 @@ for temp_old_parent_key in temporary_list_of_known_parents_to_delete_cleaned:
 
 	dictionary_of_known_parents.pop(str(temp_old_parent_key))
 
-fn_color_message("YELLOW", "Finished: Find parents with multiple children and save their values.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Find parents with multiple children and save their values.".format( time_now ))
+
 
 # ######################################################################
 # ADD THE KNOWN PARENTS TO THE CORRESPONDING CONTACTS
 # Example: Contact{FN:"Bart"} -> Contact{FN:"Bart", "PARENTS":99}
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Add the found values as new parent-contact.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Add the found parent-values as new parent-contact.".format( time_now ))
 
 for contact_key, contact_value in dictionary_of_contacts.items():
 
@@ -665,7 +798,9 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 								# Mismatch, nothing to do
 								pass
 
-fn_color_message("YELLOW", "Finished: Add the found values as new parent-contact.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Add the found parent-values as new parent-contact.".format( time_now ))
+
 
 # ######################################################################
 # LOOK FOR DOUBLE-CHILDREN-IDS AND REMOVE THE PARENT-ID IF IT IS A NORMAL *CATEGORY*
@@ -673,6 +808,9 @@ fn_color_message("YELLOW", "Finished: Add the found values as new parent-contact
 # Example: "6":"Carl" -> "#friends":["2","6","13","18"] and "#work": ["6","7","13","24"] 
 #           -> becomes   "#friends":["2","13","18"]     and "#work": ["6","7","13","24"] 
 # ######################################################################
+
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Remove categories from contacts, that are already children to a parent.".format( time_now ))
 
 # (1.) Find children, that are in both the categories and known_children.
 
@@ -741,7 +879,7 @@ for child_value, child_keys in dictionary_of_double_children.items():
 
 # (3.) Update the PARENTS-entry in the CONTACTS-dictionary one last time based on the updated KNOWN CHILDREN.
 
-# Loop through the KNOWN PARENTS (because the lister is usually shorter) and get the parent-name and ID
+# Loop through the KNOWN PARENTS (because the list is usually shorter) and get the parent-name and ID
 for parent_key, parent_value in dictionary_of_known_parents.items():
 
 	# Loop through the KNOWN CHILDREN and find the corresponding value
@@ -789,13 +927,31 @@ for child_value, child_keys in dictionary_of_known_children.items():
 	else:
 		for parent_key, parent_value in dictionary_of_known_parents.items():
 
-		# Check if the values match
-		# Example: children:"#friends" == parents:"##friends"
+			# Check if the values match
+			# Example: children:"#friends" == parents:"##friends"
 			if ("#"+child_value == parent_value[0]):
 
 				# Delete the element from the dictionary of CONTACTS
 				dictionary_of_contacts.pop( str(parent_key) )
 
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Remove categories from contacts, that are already children to a parent.".format( time_now ))
+
+
+# ######################################################################
+# ADD INFORMATION ON CONNECTIONS TO THE CONTACTS
+# 
+# ######################################################################
+
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Add information on the connections to the contacts.".format( time_now ))
+
+for parent_key, child_keys in dictionary_of_connections.items():
+
+	dictionary_of_contacts[str(parent_key)]["CONNECTIONS"] = child_keys
+
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Fished: Add information on the connections to the contacts.".format( time_now ))
 
 
 # ######################################################################
@@ -803,7 +959,8 @@ for child_value, child_keys in dictionary_of_known_children.items():
 # 
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Going through the dictionary and create JSON-data.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Going through the dictionary and create JSON-data.".format( time_now ))
 
 # (1.) Get the main contact as first entry
 
@@ -817,6 +974,7 @@ json_value = dictionary_of_contacts[str(id_number_of_main_character)]["FN"]
 json_parent = ""
 json_details = ""
 json_photo = ""
+json_connections = ""
 
 # Try the different contact-values and add it to the JSON-data
 for property_type in list_of_vcf_property_types:
@@ -824,12 +982,14 @@ for property_type in list_of_vcf_property_types:
 	# Skip these property_types
 	if ( (property_type == "FN") or (property_type == " ") ):
 		pass
+	# Skip the PHOTO also
 	elif (property_type == "PHOTO"):
 		try:
 			json_photo = dictionary_of_contacts[str(id_number_of_main_character)]["PHOTO"]
 			json_photo = json_photo.replace("ENCODING=B;TYPE=PNG:","data:image/png;base64,")
 		except KeyError:
 			json_photo = ""
+	# Anything else, like TEL, URL, ADR, ...
 	else:
 
 		try:
@@ -837,8 +997,16 @@ for property_type in list_of_vcf_property_types:
 		except KeyError:
 			json_details = "" + json_details + ""
 
-dictionary_of_json_data[ "p"+str(id_number_of_main_character) ] = {"id":"mainPerson" ,"value":json_value, "details":json_details, "parent":"", "photo":json_photo}
+# Look for a CONNECTIONS value
+try:
+	json_connections = json_connections + str( dictionary_of_contacts[str(id_number_of_main_character)]["CONNECTIONS"] )
+except KeyError:
+	json_connections = "" + json_connections + ""
 
+# Write everything into the JSON
+dictionary_of_json_data[ "p"+str(id_number_of_main_character) ] = {"id":"mainPerson" ,"value":json_value, "details":json_details, "parent":"", "photo":json_photo, "connections":json_connections}
+
+# ######################################################################
 
 # (2.) Get all the children and their parents
 for contact_key, contact_value in dictionary_of_contacts.items():
@@ -849,6 +1017,8 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 
 	json_details = ""
 	json_parent = ""
+	json_photo = ""
+	json_connections = ""
 
 	json_value = dictionary_of_contacts[str(contact_key)]["FN"]
 
@@ -858,12 +1028,15 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 		# Skip these property_types but add all others to the DETAILS-part
 		if ( (property_type == "FN") or (property_type == " ") or (property_type == "CATEGORIES")):
 			pass
+		# Skip the PHOTO also
 		elif (property_type == "PHOTO"):
 			try:
 				json_photo = dictionary_of_contacts[str(contact_key)]["PHOTO"]
 				json_photo = json_photo.replace("ENCODING=B;TYPE=PNG:","data:image/png;base64,")
+				json_photo = json_photo.replace("PHOTO:ENCODING=BASE64;TYPE=PNG:","data:image/png;base64,")
 			except KeyError:
 				json_photo = ""
+		# Anything else, like TEL, URL, ADR, ...
 		else:
 			try:
 				json_details = json_details + "<p>" + dictionary_of_contacts[str(contact_key)][property_type] + "</p>"
@@ -875,16 +1048,27 @@ for contact_key, contact_value in dictionary_of_contacts.items():
 	except KeyError:
 		pass
 
-	dictionary_of_json_data[ "p"+str(contact_key) ] = {"id":"p"+str(contact_key), "value":json_value, "details":json_details, "parent":json_parent, "photo":json_photo}
+	# Look for a CONNECTIONS value
+	try:
+		json_connections = dictionary_of_contacts[str(contact_key)]["CONNECTIONS"]
+	except KeyError:
+		json_connections = "" 
 
-fn_color_message("YELLOW", "Finished: Going through the dictionary and create JSON-data.")
+
+	# Write everything into the JSON
+	dictionary_of_json_data[ "p"+str(contact_key) ] = {"id":"p"+str(contact_key), "value":json_value, "details":json_details, "parent":json_parent, "photo":json_photo, "connections":json_connections}
+
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Going through the dictionary and create JSON-data.".format( time_now ))
+
 
 # ######################################################################
-# WRITE FAMILY-TREE-HTML-FILE
+# WRITE CONTACTS-HTML-FILE
 # 
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Creating the HTML file.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Creating the HTML file.".format( time_now ))
 
 index_template_file_handle = open("assets/index_template.html")
 index_contacts_file_handle = open("index_contacts.html", "w")
@@ -896,12 +1080,16 @@ with index_template_file_handle as index_template_file:
 
 		if (index_template_file_line.strip() == "PLACEHOLDER-FOR-JSON-DATA"):
 			index_template_file_line = dictionary_of_json_data
+
+		elif (index_template_file_line.strip() == "PLACEHOLDER-FOR-TECHNICAL-DATA"):
+			index_template_file_line = "<a href='https://github.com/msteudtn/vcf2org-chart/' target='_blank' title='vcf2org-chart'>vcf2org-chart</a> ("+version_number+") created on: "+ str( datetime.datetime.now() ) 
 		else:
 			pass
 
 		index_contacts_file_handle.write(str(index_template_file_line))
 
-fn_color_message("YELLOW", "Finished: Creating the HTML file.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "{} - Finished: Creating the HTML file.".format( time_now ))
 	
 
 # ######################################################################
@@ -909,38 +1097,44 @@ fn_color_message("YELLOW", "Finished: Creating the HTML file.")
 # 
 # ######################################################################
 
-fn_color_message("YELLOW", "\n Start: Opening HTML file.")
+time_now = datetime.datetime.now()
+fn_color_message("YELLOW", "\n {} - Start: Opening HTML file.".format( time_now ))
 
 filepath = "index_contacts.html"
 
-import subprocess, os, platform
 if platform.system() == 'Darwin':       # macOS
 	subprocess.call(('open', filepath))
 elif platform.system() == 'Windows':    # Windows
 	os.startfile(filepath)
-else:                                   # linux variants
+else:                                   # Linux variants
 	subprocess.call(('xdg-open', filepath))
 	pass
 
-fn_color_message("YELLOW", "Finished: Opening HTML file.")
+time_now = datetime.datetime.now()
+time_end = time_now
+fn_color_message("YELLOW", "{} - Finished: Opening HTML file.".format( time_now ))
 
-# Finished
+
+# ######################################################################
+# END
+# 
+# ######################################################################
 
 if (contact_counter > 0):
 	fn_color_message("GREEN", "\n {} contacts processed.".format(contact_counter))
 else:
 	fn_color_message("RED", "\n Error: no contacts found.")
 
+time_difference = time_end - time_start
+fn_color_message("GREEN", "\n All finished within {} h:min:sec.msec. Have fun! :) \n".format( time_difference ))
 
-fn_color_message("GREEN", "\n All finished.")
 
-#import json
 #print("\n END: CATEGORIES []", list_of_categories )
 #print("\n END: CATEGORIES unique", list_of_unique_categories )
 #print("\n END: DOUBLE CHILDREN", dictionary_of_double_children)
 #print("\n END: PARENTS", json.dumps(dictionary_of_known_parents, indent=4) )
+#print("\n END: CONNECTIONS", json.dumps(dictionary_of_connections, indent=4) )
 #print("\n END: CHILDREN", json.dumps(dictionary_of_known_children, indent=4) )
 #print("\n END: CONTACTS", json.dumps(dictionary_of_contacts, indent=4) )
-#print("\n END: CONTACTS", json.dumps(dictionary_of_json_data, indent=4) )
-
+#print("\n END:JSON", json.dumps(dictionary_of_json_data, indent=4) )
 
