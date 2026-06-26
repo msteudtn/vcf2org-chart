@@ -1,25 +1,13 @@
 BEGIN:VCARD
 VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
-UID:8092b9ef-da5d-4a29-b9fa-1a9343918ef9
-FN:Abraham Jay "Abe" Simpson II
-N:Simpson II;Abraham Jay "Abe";;;
-NOTE:Abraham Jay "Abe" Simpson II\, better known as Grampa Simpson\, or sim
- ply Grampa\, is a recurring fictional character in the animated television
-  series The Simpsons.\n\nNo categories or hastags in this entry.
-REV:2026-06-18T19:42:49Z
-END:VCARD
-
-BEGIN:VCARD
-VERSION:3.0
-PRODID:Thunderbird CardBook V105.3//DE
 UID:848c3440-f289-4c3d-b528-003bea4aea4e
 CATEGORIES:Friends
-FN:Barnard "Barney" Gumble
+FN:Barney Gumble
 N:Gumble;Barnard "Barney";;;
 NOTE:Barnard "Barney" Gumble is a recurring character in the American anima
- ted TV series The Simpsons.
-REV:2026-05-28T09:41:25Z
+ ted TV series The Simpsons.\nHe has a connection to |moe
+REV:2026-06-25T09:30:04Z
 END:VCARD
 
 BEGIN:VCARD
@@ -82,19 +70,19 @@ VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:e96e85c9-de11-4238-bbf5-9130b704d0f1
 CATEGORIES:Friends
-FN:Carlton Carlson
+FN:Carl Carlson
 N:Carlson;Carlton;;;
 NOTE:Carlton Carlson is Homer's friend and co-worker (sometimes identified 
  as his supervisor) at the Nuclear Power Plant and is often seen with Lenny
- .\n\n#work
-REV:2026-05-28T09:34:50Z
+ .\n\n#work |moe
+REV:2026-06-25T09:28:17Z
 END:VCARD
 
 BEGIN:VCARD
 VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:4359fc22-112f-42d9-b900-cc2ca5895562
-FN:Charles Montgomery Plantagenet Schicklgruber "Monty" Burns
+FN:Charles Montgomery Burns
 N:Plantagenet Schicklgruber "Monty" Burns;Charles Montgomery;;;
 TEL:(636) 555-0113
 NOTE:Charles Montgomery Plantagenet Schicklgruber "Monty" Burns\, usually r
@@ -102,7 +90,7 @@ NOTE:Charles Montgomery Plantagenet Schicklgruber "Monty" Burns\, usually r
   in the Fox animated television series The Simpsons\, voiced initially by 
  Christopher Collins and by Harry Shearer in later episodes.\n\n#work\n##bu
  rns
-REV:2026-06-18T18:27:28Z
+REV:2026-06-25T09:28:32Z
 PHOTO;ENCODING=B;TYPE=PNG:iVBORw0KGgoAAAANSUhEUgAAAXwAAAF8CAIAAABDhZedAAASO
  HpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjapZlXdly7kkT/MYoeAkzCDQd2rZ5BD793oEp
  80tX9e6REU+YcIDMyDOjO//3vdf/Dh8VcnOXaSi/F82Hdehz80PznY/F/8j/y/3we6t/vfATf3
@@ -950,7 +938,20 @@ FN:Elizabeth Hoover
 N:Hoover;Elizabeth;;;
 NOTE:Elizabeth Hoover (voiced by Maggie Roswell\, understudied by Marcia Mi
  tzman Gaven) is a second-grade teacher at Springfield Elementary.\n\n#lisa
-REV:2026-05-28T09:17:27Z
+  |moe
+REV:2026-06-25T17:32:51Z
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+PRODID:Thunderbird CardBook V105.3//DE
+UID:8092b9ef-da5d-4a29-b9fa-1a9343918ef9
+FN:Grandpa Abe Simpson
+N:Simpson II;Abraham Jay "Abe";;;
+NOTE:Abraham Jay "Abe" Simpson II\, better known as Grampa Simpson\, or sim
+ ply Grampa\, is a recurring fictional character in the animated television
+  series The Simpsons.\n\nNo categories or hastags in this entry.
+REV:2026-06-25T09:28:07Z
 END:VCARD
 
 BEGIN:VCARD
@@ -973,12 +974,12 @@ BEGIN:VCARD
 VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:fa5a782b-027e-481b-856b-96c66241edeb
-FN:Kirk Evelyn Van Houten
+FN:Kirk Van Houten
 N:Van Houten;Kirk Evelyn;;;
 NOTE:Kirk Evelyn Van Houten (voiced by Hank Azaria) is the father of Milhou
  se\, and the remarried husband (and cousin) of Luann Van Houten. \n\n#milh
  ouse
-REV:2026-05-28T09:02:23Z
+REV:2026-06-25T09:28:44Z
 END:VCARD
 
 BEGIN:VCARD
@@ -986,11 +987,11 @@ VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:a88c0545-058e-4066-89e3-73854ec2b622
 CATEGORIES:Friends
-FN:Lenford "Lenny" Leonard
+FN:Lenny Leonard
 N:Leonard;Lenford "Lenny";;;
 NOTE:Lenford "Lenny" Leonard (voiced by Harry Shearer) is friends with Carl
   Carlson\, Homer Simpson\, Moe Szyslak and Barney Gumble. \n\n#work
-REV:2026-05-28T09:33:46Z
+REV:2026-06-25T09:28:51Z
 END:VCARD
 
 BEGIN:VCARD
@@ -998,11 +999,11 @@ VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:9469319e-7ded-444e-ac2b-7e21eaa8dcfa
 CATEGORIES:My Family
-FN:Lisa Marie Simpson
-N:Simpson;Lisa Marie;;;
+FN:Lisa Simpson
+N:Simpson;Lisa;;;
 NOTE:Lisa Marie Simpson is a fictional character and one of the main protag
  onists in the animated television sitcom series The Simpsons.\n\n##lisa
-REV:2026-05-28T09:16:37Z
+REV:2026-06-25T11:14:41Z
 END:VCARD
 
 BEGIN:VCARD
@@ -1010,12 +1011,12 @@ VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:554d5068-aec5-44f3-8458-0e22f0a81541
 CATEGORIES:My Family
-FN:Margaret Lenny "Maggie" Simpson
+FN:Maggie Simpson
 N:Simpson;Margaret Lenny "Maggie";;;
 NOTE:Margaret Lenny "Maggie" Simpson is a fictional character in the animat
  ed television series The Simpsons and the youngest member of the Simpson f
  amily.
-REV:2026-05-28T09:23:22Z
+REV:2026-06-25T09:28:58Z
 END:VCARD
 
 BEGIN:VCARD
@@ -1049,13 +1050,13 @@ VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:76886981-28ff-4422-b674-c3f1b19263d3
 CATEGORIES:Friends
-FN:Moammar "Moe" Szyslak
+FN:Moe Szyslak
 N:Szyslak;Moammar "Moe";;;
 TEL:764-84377
 TEL;TYPE=WORK:555-1239
 NOTE:Moammar "Moe" Szyslak is a recurring character from the animated telev
- ision series The Simpsons.
-REV:2026-06-18T18:27:43Z
+ ision series The Simpsons.\n ##moe
+REV:2026-06-25T09:29:09Z
 PHOTO;ENCODING=B;TYPE=PNG:iVBORw0KGgoAAAANSUhEUgAAAXwAAAF8CAIAAABDhZedAAALG
  HpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjapZhbduu4DkT/OYoeAgm+h0MQ5Fp3Bnf4vSE
  7OXmcv5YTW6FkCgSqCsWE8///3fAPh7TZQql98NkiR5llyuJkxNex+VV+hd/zGprvT44U5/P+H
@@ -1740,13 +1741,13 @@ BEGIN:VCARD
 VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:778760a1-571f-493c-9dde-3e8bb6790c49
-FN:Patricia Maleficent Patty Bouvier
+FN:Patty Bouvier
 N:Bouvier;Patricia Maleficent;Patty;;
-NOTE:Patricia Maleficent Bouvier (aka Patricia Agatha Cruella Bouvier[28]) 
- is the younger of the two.[29] Despite the similarities between her and Se
- lma\, Patty is more jaded than her sister\, particularly towards relations
- hips.\n\n#marge
-REV:2026-05-28T08:48:17Z
+NOTE:Patricia Maleficent Bouvier (aka Patricia Agatha Cruella Bouvier is th
+ e younger of the two Despite the similarities between her and Selma\, Patt
+ y is more jaded than her sister\, particularly towards relationships.\n\n#
+ marge
+REV:2026-06-25T09:29:40Z
 END:VCARD
 
 BEGIN:VCARD
@@ -1776,11 +1777,11 @@ BEGIN:VCARD
 VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
 UID:304474d3-ca07-459c-ac70-e6fe9df59a33
-FN:Selma Bouvier-Terwilliger-Hutz-McClure-Stu-D'Amico-Simpson
+FN:Selma Bouvier
 N:Bouvier-Terwilliger-Hutz-McClure-Stu-D'Amico-Simpson;Selma;;;
 NOTE:Selma Bouvier is two minutes older than Patty. Due to a childhood bott
  le rocket accident\, she has no sense of taste or smell.\n\n#marge
-REV:2026-05-28T08:49:08Z
+REV:2026-06-25T09:29:49Z
 END:VCARD
 
 BEGIN:VCARD
@@ -1789,8 +1790,8 @@ PRODID:Thunderbird CardBook V105.3//DE
 UID:24a81829-0106-4823-af3c-c8c51a61a955
 FN:Test Contact - that is a child of the test-parent
 N:- that is a child of the test-parent;Test Contact;;;
-NOTE:#test_parent
-REV:2026-06-18T14:33:09Z
+NOTE:#TEST_parent
+REV:2026-06-23T18:53:39Z
 END:VCARD
 
 BEGIN:VCARD
@@ -1819,6 +1820,58 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 PRODID:Thunderbird CardBook V105.3//DE
+UID:3821ed6b-78b9-4aaa-9c6f-d5325b6505fa
+FN:Test Contact - with |connection to ##milhouse
+N:- with |connection to ##milhouse;Test Contact;;;
+NOTE:|milhouse #test_parent
+REV:2026-06-24T15:03:26Z
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+PRODID:Thunderbird CardBook V105.3//DE
+UID:141f5ec5-7a67-4c02-9116-1779453af7ae
+FN:Test Contact - with |connection to ##moe
+N:- with |connection to ##moe;Test Contact;;;
+NOTE:A connection to |moe and also a child of #test_parent
+REV:2026-06-24T15:03:49Z
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+PRODID:Thunderbird CardBook V105.3//DE
+UID:88080f9e-819c-429c-b9eb-8788c49565c8
+FN:Test Contact - with |connection to a non-existing ##parent
+N:- with |connection to a non-existing ##parent;Test Contact;;;
+NOTE:This contact claims it's connected to |non-existing-parent but that pa
+ rent doens't exist.
+REV:2026-06-24T15:03:14Z
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+PRODID:Thunderbird CardBook V105.3//DE
+UID:600c2ebf-030b-405f-b93c-794bb609d036
+FN:Test Contact - with connection to ##moe\, ##milhouse and ##bart
+N:- with connection to ##moe\, ##milhouse and ##bart;Test Contact;;;
+NOTE:A contact with several connections |moe |milhouse |bart
+REV:2026-06-24T16:03:01Z
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+PRODID:Thunderbird CardBook V105.3//DE
+UID:051df68c-281c-41d8-9a9e-895aba3376bd
+FN:Test Contact - with multiple #children
+N:- with multiple #children;Test Contact;;;
+NOTE:This contact has the two children #burns and #bart\nBut only the last 
+ one will be
+REV:2026-06-24T15:03:57Z
+END:VCARD
+
+BEGIN:VCARD
+VERSION:3.0
+PRODID:Thunderbird CardBook V105.3//DE
 UID:41ed519e-8799-4549-b5db-33452bba2f88
 CATEGORIES:Friends,My Family
 FN:Test Contact - with multiple categories
@@ -1827,17 +1880,6 @@ NOTE:This contact has the categories "My Family" and "Friends"\nThe script
  doesn't support multiple categories or parent-items. So\, it should only a
  ppear one time in the chart.
 REV:2026-06-18T14:34:53Z
-END:VCARD
-
-BEGIN:VCARD
-VERSION:3.0
-PRODID:Thunderbird CardBook V105.3//DE
-UID:051df68c-281c-41d8-9a9e-895aba3376bd
-FN:Test Contact - with multiple children
-N:- with multiple children;Test Contact;;;
-NOTE:This contact has the two children #burns and #bart\nBut only the last 
- one will be
-REV:2026-06-18T16:00:23Z
 END:VCARD
 
 BEGIN:VCARD
