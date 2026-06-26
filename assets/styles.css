@@ -1,0 +1,58 @@
+
+/* SVG-wrapper for the PATHS and CIRCLES at 100% size and in the background */
+#svg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  z-index: -1;
+  position:fixed;
+}
+
+/* TABLE with the contact names, details and buttons inside a DIV */
+table {
+	width: 100%;
+}
+
+/* Table cells */
+td {
+	padding: 1px;	
+/*	border: 1px solid red; */
+}
+
+sub {
+	font-weight: 400;
+}
+
+/* Class for the SPAN with contact-DETAILS. This SPAN has display:none at the beginning. */ 
+.class_for_details {
+	font-size:80%;
+	border-top: 1px dotted #f0f0f0; 	
+	display:block;
+	margin-top: 0px;
+}
+
+/* Class for the SPAN that acts as "BUTTON" for DETAILS, SUB-LEVELS and CONNECTIONS */
+/* A real button would be better for accessibility but I was unable to get the automatic "contrast-color" for it. */
+.mybutton {
+	background-color: transparent;
+	margin: 0.1em; 
+	border: 1px solid #f0f0f0;
+	border-radius: 10%;
+	cursor: pointer;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.mybutton:hover {
+	border: 1px dotted #000;
+}
+
+/* Class for the <select> <option> to choose the LEVELS from the main person */
+select {
+    border: 1px solid #fff;
+    background-color: rgba(255,255,255,.5);
+    padding: 5px;
+}
+
