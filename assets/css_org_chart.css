@@ -1,6 +1,7 @@
 /*
 CSS based on "CSS-only Organizational Chart" by Envato Tuts+ 
 https://codepen.io/tutsplus/pen/MWedpoj
+12345
 License: MIT
 */
 
@@ -12,35 +13,6 @@ License: MIT
     padding: 0;
 }
 
-.class_for_details {
-	font-size:80%;
-	border-top: 1px solid black; 	
-	display:block;
-	margin-top: 10px;
-/*	display:none; */
-}
-
-.mybutton {
-/*	aspect-ratio: 1/1;	*/
-/*	padding-bottom: 100%;	*/
-	background-color: transparent;
-	padding: 2px;
-	margin: 0.1em; 
-/*	border: none; */
-	border: 1px solid #c0c0c0;
-	border-radius: 10%;
-	cursor: pointer;
-}
-
-select {
-    border: 1px solid #fff;
-    background-color: rgba(255,255,255,.5);
-    padding: 5px;
-}
-
-.mybutton:hover {
-	border: 1px dotted #000;
-}
 
 /* colors for all the levels 
     https://htmlcolorcodes.com/ */
@@ -172,7 +144,7 @@ ol.organizational-chart li > div {
     background-color: #fff;
     border-radius: 2px;
     min-height: 2em;
-    padding: 0.5em;
+    padding: 0.2em;
 }
 
 /*** PRIMARY ***/
